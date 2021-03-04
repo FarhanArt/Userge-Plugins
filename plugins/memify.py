@@ -52,7 +52,7 @@ async def memify(message: Message):
             await message.err("This Gif is Gey (｡ì _ í｡), won't memify it.")
             return
         dls_loc = jpg_file
-    await message.edit("` Ingfo curhatan hari ini gan?`")
+    await message.edit("__Maaf kalo jelek ya ajg__")
     webp_file = await draw_meme_text(dls_loc, message.input_str)
     await message.client.send_sticker(chat_id=message.chat.id,
                                       sticker=webp_file,
