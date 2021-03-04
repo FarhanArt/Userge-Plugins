@@ -110,7 +110,7 @@ def last_online(user):
     elif user.status == 'long_time_ago':
         time += "Sudah Meninggal :("
     elif user.status == 'online':
-        time += "Hidup"
+        time += "Sedang bernafas"
     elif user.status == 'offline':
         time += datetime.fromtimestamp(user.last_online_date).strftime("%a, %d %b %Y, %H:%M:%S")
     return time
