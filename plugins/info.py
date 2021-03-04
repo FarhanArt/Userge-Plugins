@@ -21,7 +21,7 @@ GMUTE_USER_BASE = get_collection("GMUTE_USER")
              "{tr}info [reply to User]"}, allow_via_bot=False)
 async def info(msg: Message):
     """ To check User's info """
-    await msg.edit("`Checking...`")
+    await msg.edit("`Sedang menyelidiki pengguna...`")
     user_id = msg.input_str
     replied = msg.reply_to_message
     if not user_id:
@@ -32,7 +32,7 @@ async def info(msg: Message):
     try:
         user = await msg.client.get_users(user_id)
     except Exception:
-        await msg.edit("Penggunaan tidak dikenal...")
+        await msg.edit("Pengguna tidak dikenal...")
         return
     await msg.edit("__Mendapat informasi dari database telegram...__")
     l_name = user.last_name or ''
@@ -43,24 +43,24 @@ async def info(msg: Message):
     common_chats = await msg.client.get_common_chats(user.id)
     user_info = f"""
 **About [{user.first_name} {l_name}](tg://user?id={user.id})**:
-  - **ID Penggunaan**: `{user.id}`
-  - **Pusat Data**: `{user.dc_id}`
-  - **Username**: {username}
-  - **Terakhir hidup**: `{last_online(user)}`
+  - **ID Pengguna**: `{user.id}`
+  - **Pusat Data Ke**: `{user.dc_id}`
+  - **Tag Pengguna**: {username}
+  - **Terakhir Hidup**: `{last_online(user)}`
   - **Total Grub**: `{len(common_chats)}`
-  - **Nomer Telepon**: `{user.is_contact}`
+  - **Kontak*: `{user.is_contact}`
         """
     if user:
         if Config.SPAM_WATCH_API:
             status = spamwatch.Client(Config.SPAM_WATCH_API).get_ban(user.id)
             if status is False:
-                user_info += "\n**Diblokir SpamWatch** : `False`\n"
+                user_info += "\n**Diblokir SpamWatch** : `❎`\n"
             else:
-                user_info += "\n**Diblokir SpamWatch** : `True`\n"
+                user_info += "\n**Diblokir SpamWatch** : `✅`\n"
                 user_info += f"    **● Alasan** : `{status.reason or None}`\n"
                 user_info += f"    **● Pesan** : `{status.message or None}`\n"
         else:
-            user_info += "\n**Diblokir SpamWatch** : `to get this Info, set var`\n"
+            user_info += "\n**SpamWatch** : `Untuk mendapatkan informasinya, save var`\n"
 
         async with aiohttp.ClientSession() as ses:
             async with ses.get(
@@ -74,43 +74,43 @@ async def info(msg: Message):
 
         if iv['success'] and iv['results']['attributes']['is_blacklisted'] is True:
             reason = iv['results']['attributes']['blacklist_reason']
-            user_info += "**Intellivoid SpamProtection** : `True`\n"
-            user_info += f"    **● Reason** : `{reason}`\n"
+            user_info += "**Perlindungan Spam Intellivoid** : `✅`\n"
+            user_info += f"    **● Alasan** : `{reason}`\n"
         else:
-            user_info += "**Intellivoid SpamProtection** : `False`\n"
+            user_info += "**Perlindungan Spam Intellivoid** : `❎`\n"
         if cas_banned['ok']:
             reason = cas_banned['result']['messages'][0] or None
-            user_info += "**AntiSpam Banned** : `True`\n"
-            user_info += f"    **● Reason** : `{reason}`\n"
+            user_info += "**Diblokir Antispam** : `✅`\n"
+            user_info += f"    **● Alasan** : `{reason}`\n"
         else:
-            user_info += "**AntiSpam Banned** : `False`\n"
+            user_info += "**Diblokir AntiSpam** : `❎`\n"
         if user_gmuted:
-            user_info += "**User GMuted** : `True`\n"
-            user_info += f"    **● Reason** : `{user_gmuted['reason'] or None}`\n"
+            user_info += "**Status GMuted** : `✅`\n"
+            user_info += f"    **● Alasan** : `{user_gmuted['reason'] or None}`\n"
         else:
-            user_info += "**User GMuted** : `False`\n"
+            user_info += "**Status GMuted** : `❎`\n"
         if user_gbanned:
-            user_info += "**User GBanned** : `True`\n"
-            user_info += f"    **● Reason** : `{user_gbanned['reason'] or None}`"
+            user_info += "**Status GBanned** : `✅`\n"
+            user_info += f"    **● Alasan** : `{user_gbanned['reason'] or None}`"
         else:
-            user_info += "**User Gbanned** : `False`"
+            user_info += "**Status Gbanned** : `❎`"
         await msg.edit_or_send_as_file(text=user_info, disable_web_page_preview=True)
 
 
 def last_online(user):
     time = ""
     if user.is_bot:
-        time += "🤖 Bot :("
+        time += "🤖 Dia Bot :("
     elif user.status == 'recently':
-        time += "Recently"
+        time += "Baru saja"
     elif user.status == 'within_week':
-        time += "Within the last week"
+        time += "Dalam seminggu terakhir"
     elif user.status == 'within_month':
-        time += "Within the last month"
+        time += "Dalam sebulan terakhir"
     elif user.status == 'long_time_ago':
-        time += "A long time ago :("
+        time += "Sudah Meninggal :("
     elif user.status == 'online':
-        time += "Currently Online"
+        time += "Hidup"
     elif user.status == 'offline':
         time += datetime.fromtimestamp(user.last_online_date).strftime("%a, %d %b %Y, %H:%M:%S")
     return time
