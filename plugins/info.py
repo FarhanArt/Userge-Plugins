@@ -32,9 +32,9 @@ async def info(msg: Message):
     try:
         user = await msg.client.get_users(user_id)
     except Exception:
-        await msg.edit("I don't know that User...")
+        await msg.edit("Penggunaan tidak dikenal...")
         return
-    await msg.edit("`Getting Info...`")
+    await msg.edit("__Mendapat informasi dari database telegram...__")
     l_name = user.last_name or ''
     if user.username:
         username = '@' + user.username
@@ -43,24 +43,24 @@ async def info(msg: Message):
     common_chats = await msg.client.get_common_chats(user.id)
     user_info = f"""
 **About [{user.first_name} {l_name}](tg://user?id={user.id})**:
-  - **UserID**: `{user.id}`
-  - **Data Center**: `{user.dc_id}`
+  - **ID Penggunaan**: `{user.id}`
+  - **Pusat Data**: `{user.dc_id}`
   - **Username**: {username}
-  - **Last Online**: `{last_online(user)}`
-  - **Common Groups**: `{len(common_chats)}`
-  - **Contact**: `{user.is_contact}`
+  - **Terakhir hidup**: `{last_online(user)}`
+  - **Total Grub**: `{len(common_chats)}`
+  - **Nomer Telepon**: `{user.is_contact}`
         """
     if user:
         if Config.SPAM_WATCH_API:
             status = spamwatch.Client(Config.SPAM_WATCH_API).get_ban(user.id)
             if status is False:
-                user_info += "\n**SpamWatch Banned** : `False`\n"
+                user_info += "\n**Diblokir SpamWatch** : `False`\n"
             else:
-                user_info += "\n**SpamWatch Banned** : `True`\n"
-                user_info += f"    **● Reason** : `{status.reason or None}`\n"
-                user_info += f"    **● Message** : `{status.message or None}`\n"
+                user_info += "\n**Diblokir SpamWatch** : `True`\n"
+                user_info += f"    **● Alasan** : `{status.reason or None}`\n"
+                user_info += f"    **● Pesan** : `{status.message or None}`\n"
         else:
-            user_info += "\n**SpamWatch Banned** : `to get this Info, set var`\n"
+            user_info += "\n**Diblokir SpamWatch** : `to get this Info, set var`\n"
 
         async with aiohttp.ClientSession() as ses:
             async with ses.get(
