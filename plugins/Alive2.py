@@ -32,9 +32,9 @@ _CHAT, _MSG_ID = None, None
 _LOGO_ID = None
 
 
-@userge.on_cmd("alive", about={
+@userge.on_cmd("on", about={
     'header': "This command is just for fun"}, allow_channels=False)
-async def alive(message: Message):
+async def on(message: Message):
     if not (_CHAT and _MSG_ID):
         try:
             _set_data()
